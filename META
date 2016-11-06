@@ -1,0 +1,6 @@
+name="openbsd"
+description="OpenBSD bindings"
+version="0.1"
+requires=""
+archive(native)="openbsd.cmxa"
+archive(byte)="openbsd.cma"

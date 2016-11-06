@@ -1,0 +1,5 @@
+external arc4random : unit -> int = "openbsd_arc4random"
+external arc4random_uniform : int -> int = "openbsd_arc4random_uniform"
+external arc4random_buf : string -> unit = "openbsd_arc4random_buf"
+external newhash : string -> int -> string = "openbsd_newhash"
+external checkhash : string  -> string -> bool = "openbsd_checkhash"
