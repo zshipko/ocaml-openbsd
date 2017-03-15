@@ -18,6 +18,7 @@ To uninstall
 * `arc4random_buf`
 * `newhash`
 * `checkhash`
+* `pledge`
 
 ## LICENCE
 

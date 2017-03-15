@@ -55,3 +55,14 @@ value openbsd_checkhash(value data, value hash){
     CAMLreturn(Val_bool (crypt_checkpass(String_val(data), String_val(hash)) == 0));
 }
 
+value openbsd_pledge(value s, value a)
+{
+    CAMLparam2(s, a);
+    int i, len = Wosize_val(a);
+    char *arr[len];
+    for(i = 0; i < len; i++){
+        arr[i] = String_val(Field(a, i));
+    }
+
+    CAMLreturn (Val_int (pledge(String_val(s), (const char**)arr)));
+}
