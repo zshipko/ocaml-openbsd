@@ -10,27 +10,25 @@
 /* arc4random */
 
 value openbsd_arc4random (value unit) {
-    CAMLparam1(unit);
-    CAMLreturn(Int_val(arc4random ()));
+    return caml_copy_int32(arc4random ());
 }
 
 value openbsd_arc4random_uniform (value upper_bound) {
-    CAMLparam1(upper_bound);
-    uint32_t i = Int_val(upper_bound);
-    CAMLreturn(Int_val(arc4random_uniform(i)));
+    uint32_t i = Int64_val(upper_bound);
+    return caml_copy_int32(arc4random_uniform(i));
 }
 
 void openbsd_arc4random_buf (value buffer) {
     CAMLparam1(buffer);
     size_t len = caml_string_length(buffer);
-    char *s = String_val(buffer);
-    arc4random_buf(s, len);
+    arc4random_buf(String_val(buffer), len);
     CAMLreturn0;
 }
 
 /* cryptographic hashing */
 
-value openbsd_newhash(value data, value _size){
+value openbsd_newhash(value data, value mode, value _size){
+#ifdef __OpenBSD__
     CAMLparam2(data, _size);
     ssize_t size = Int_val(_size);
     if (size < 0 || size % 64 != 0){
@@ -40,23 +38,31 @@ value openbsd_newhash(value data, value _size){
 
     CAMLlocal1(hash);
     hash = caml_alloc_string(size);
-    char *hashstr = String_val(hash);
-    const char *datastr = String_val(data);
-
-    if (crypt_newhash(datastr, "blowfish,a", hashstr, size)){
+    // Default "blowfish,a"
+    if (crypt_newhash(String_val(data), String_val(mode), String_val(hash), size)){
         caml_failwith(strerror(errno));
         CAMLreturn(Val_unit);
     }
     CAMLreturn(hash);
+#else
+    camlfailwith("OpenBSD required");
+    CAMLreturn0;
+#endif
 }
 
-value openbsd_checkhash(value data, value hash){
+value openbsd_checkpass(value data, value hash){
+#ifdef __OpenBSD__
     CAMLparam2(data, hash);
     CAMLreturn(Val_bool (crypt_checkpass(String_val(data), String_val(hash)) == 0));
+#else
+    camlfailwith("OpenBSD required");
+    CAMLreturn0;
+#endif
 }
 
 value openbsd_pledge(value s, value a)
 {
+#ifdef __OpenBSD__
     CAMLparam2(s, a);
     int i, len = Wosize_val(a);
     char *arr[len];
@@ -65,4 +71,8 @@ value openbsd_pledge(value s, value a)
     }
 
     CAMLreturn (Val_int (pledge(String_val(s), (const char**)arr)));
+#else
+    camlfailwith("OpenBSD required");
+    CAMLreturn0;
+#endif
 }

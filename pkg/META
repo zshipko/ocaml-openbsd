@@ -1,0 +1,9 @@
+description = "Bindings to pledge and other OpenBSD functions"
+version= "%%VERSION_NUM%%"
+
+requires = ""
+archive(byte) = "openbsd.cma"
+archive(native) = "openbsd.cmxa"
+plugin(byte) = "openbsd.cma"
+plugin(native) = "openbsd.cmxs"
+
