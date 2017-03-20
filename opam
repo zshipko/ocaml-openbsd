@@ -1,0 +1,22 @@
+opam-version: "1.2"
+version: "0.1"
+maintainer: "Zach Shipko <zachshipko@gmail.com>"
+authors: ["Zach Shipko"]
+license: "ISC"
+homepage: "https://github.com/zshipko/ocaml-openbsd"
+bug-reports: "https://github.com/zshipko/ocaml-openbsd/issues"
+dev-repo: "https://github.com/zshipko/ocaml-openbsd.git"
+doc: "https://github.com/zshipko/ocaml-openbsd"
+build: [[
+    "ocaml" "./pkg/pkg.ml" "build"
+        "--pinned" "%{pinned}%"
+]]
+build-test: [
+    [ "ocaml" "pkg/pkg.ml" "build" "--pinned" "%{pinned}%" "--tests" "true" ]
+    [ "ocaml" "pkg/pkg.ml" "test" ]
+]
+depends: [
+    "ocamlfind" {build}
+    "ocamlbuild" {build}
+    "topkg" {build}
+]
